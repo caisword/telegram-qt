@@ -264,6 +264,7 @@ public:
 signals:
     void wantedMainDcChanged(quint32 dc, QString dcForPhoneNumber);
     void newRedirectedPackage(const QByteArray &data, quint32 dc);
+    void contactsFound(const QString &query, const TLContactsFound &result);
 
     void statusChanged(int status, int reason, quint32 dc);
     void authStateChanged(int status, quint32 dc);
@@ -314,6 +315,7 @@ protected:
     TLValue processContactsGetContacts(CTelegramStream &stream, quint64 id);
     TLValue processContactsImportContacts(CTelegramStream &stream, quint64 id);
     TLValue processContactsDeleteContacts(CTelegramStream &stream, quint64 id);
+    TLValue processContactsSearch(CTelegramStream &stream, quint64 id);
     TLValue processContactsResolveUsername(CTelegramStream &stream, quint64 id);
     TLValue processUpdatesGetState(CTelegramStream &stream, quint64 id);
     TLValue processUpdatesGetDifference(CTelegramStream &stream, quint64 id);

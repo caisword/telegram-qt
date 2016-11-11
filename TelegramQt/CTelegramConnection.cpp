@@ -1901,6 +1901,9 @@ void CTelegramConnection::processRpcResult(CTelegramStream &stream, quint64 idHi
         case TLValue::ContactsDeleteContacts:
             processingResult = processContactsDeleteContacts(stream, id);
             break;
+        case TLValue::ContactsSearch:
+            processingResult = processContactsSearch(stream, id);
+            break;
         case TLValue::ContactsResolveUsername:
             processingResult = processContactsResolveUsername(stream, id);
             break;
@@ -2354,6 +2357,30 @@ TLValue CTelegramConnection::processContactsDeleteContacts(CTelegramStream &stre
     stream >> result;
 
     return result;
+}
+
+TLValue CTelegramConnection::processContactsSearch(CTelegramStream &stream, quint64 id)
+{
+    TLContactsFound result;
+    stream >> result;
+
+    if (result.tlType == TLValue::ContactsFound) {
+        const QByteArray data = m_submittedPackages.value(id);
+
+        if (data.isEmpty()) {
+            qWarning() << Q_FUNC_INFO << "Can not restore rpc message" << id;
+            return result.tlType;
+        }
+
+        CTelegramStream stream(data);
+        TLValue value;
+        QString query;
+        stream >> value;
+        stream >> query;
+        emit contactsFound(query, result);
+    }
+
+    return result.tlType;
 }
 
 TLValue CTelegramConnection::processContactsResolveUsername(CTelegramStream &stream, quint64 id)
