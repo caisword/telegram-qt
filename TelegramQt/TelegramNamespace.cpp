@@ -259,6 +259,28 @@ bool TelegramNamespace::MessageMediaInfo::setMimeType(const QString &mimeType)
     return false;
 }
 
+bool TelegramNamespace::MessageMediaInfo::getContactInfo(TelegramNamespace::UserInfo *info) const
+{
+    if (d->tlType != TLValue::MessageMediaContact) {
+        return false;
+    }
+
+    *info->d = UserInfo::Private(); // Reset
+    info->d->id = d->userId;
+    info->d->firstName = d->firstName;
+    info->d->lastName = d->lastName;
+    info->d->phone = d->phoneNumber;
+    return true;
+}
+
+void TelegramNamespace::MessageMediaInfo::setContactInfo(const TelegramNamespace::UserInfo *info)
+{
+    d->tlType = TLValue::MessageMediaContact;
+    d->firstName = info->d->firstName;
+    d->lastName = info->d->lastName;
+    d->phoneNumber = info->d->phone;
+}
+
 QString TelegramNamespace::MessageMediaInfo::alt() const
 {
     switch (d->tlType) {

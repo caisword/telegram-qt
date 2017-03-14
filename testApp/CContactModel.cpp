@@ -399,7 +399,7 @@ QString CContactModel::getContactName(const TelegramNamespace::UserInfo &contact
 
     QString name = contact.firstName() + QLatin1Char(' ') + contact.lastName();
     if (!name.simplified().isEmpty()) {
-        return name;
+        return name.simplified();
     }
 
     return tr("Unknown name");
