@@ -1001,7 +1001,7 @@ void GeneratorNG::generate()
             << QLatin1String("help")
             << QLatin1String("messages")
             << QLatin1String("contacts")
-            << QLatin1String("channels")
+//            << QLatin1String("channels")
             << QLatin1String("updates")
             << QLatin1String("upload")
             << QLatin1String("users");

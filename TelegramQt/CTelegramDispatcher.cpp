@@ -841,7 +841,7 @@ void CTelegramDispatcher::setMessageRead(const TelegramNamespace::Peer &peer, qu
     const TLInputPeer inputPeer = publicPeerToInputPeer(peer);
 
     if (inputPeer.tlType != TLValue::InputPeerEmpty) {
-        activeConnection()->messagesReadHistory(inputPeer, messageId, /* offset */ 0);
+        activeConnection()->messagesReadHistory(inputPeer, messageId);
     }
 }
 
@@ -1195,7 +1195,7 @@ void CTelegramDispatcher::getInitialUsers()
 
 void CTelegramDispatcher::getInitialDialogs()
 {
-    activeConnection()->messagesGetDialogs(0, 1);
+    activeConnection()->messagesGetDialogs(/* offsetDate */ 0, /* offsetId */ 0, TLInputPeer(), /* limit */ 1);
 }
 
 void CTelegramDispatcher::getContacts()
@@ -1694,7 +1694,7 @@ void CTelegramDispatcher::internalProcessMessageReceived(const TLMessage &messag
     if (!m_users.contains(apiMessage.fromId) && !m_askedUserIds.contains(apiMessage.fromId)) {
         m_askedUserIds.append(apiMessage.fromId);
 
-        activeConnection()->messagesGetDialogs(0, 1);
+        activeConnection()->messagesGetDialogs(/* offsetDate */ 0, /* offsetId */ 0, TLInputPeer(), /* limit */ 1);
     }
 
     emit messageReceived(apiMessage);
