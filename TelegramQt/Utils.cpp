@@ -269,7 +269,12 @@ QByteArray Utils::unpackGZip(const QByteArray &data)
     stream.avail_in = data.size();
     stream.next_in = (Bytef*)(data.data());
 
-    inflateResult = inflateInit2(&stream, 15 + 32); // gzip decoding
+    /* MAX_WBITS = 15
+     * -1..-15 process raw deflate data with no header or trailer
+     *  0..15 all process zlib-wrapped deflate data
+     * 16..31, i.e. 16 added to 0..15, process gzip-wrapped deflate data
+     * 32..47 (32 added to 0..15) will automatically detect either a gzip or zlib header */
+    inflateResult = inflateInit2(&stream, MAX_WBITS + 16); // gzip
 
     if (inflateResult != Z_OK) {
         return QByteArray();
